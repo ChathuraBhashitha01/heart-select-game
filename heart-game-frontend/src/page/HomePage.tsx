@@ -24,7 +24,9 @@ export default function LoginPage() {
 
   const handleClose = () => {
     sessionStorage.removeItem('token')
-    window.location.href = "/home";
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("refreshToken");
+    window.location.href = "/";
   };
 
   const handleStartBtnClick = () => {
@@ -72,7 +74,7 @@ export default function LoginPage() {
               gameMode.includes("easy")
                 ? "bg-green-400/60"
                 : " bg-white/30 hover:bg-white/40 "
-            }rounded-[10px] flex flex-col justify-center items-center`}
+            } rounded-[10px] flex flex-col justify-center items-center`}
           >
             <img src={EasyModeIcon} className="w-[50px] h-[50px]" />
             <label className="text-[20px] font-medium text-white">Easy</label>
@@ -84,7 +86,7 @@ export default function LoginPage() {
               gameMode.includes("medium")
                 ? "bg-green-400/60"
                 : " bg-white/30 hover:bg-white/40 "
-            }rounded-[10px] flex flex-col justify-center items-center`}
+            } rounded-[10px] flex flex-col justify-center items-center`}
           >
             <img src={MediumModelIcon} className="w-[50px] h-[50px]" />
             <label className="text-[20px] font-medium text-white">Medium</label>
@@ -95,8 +97,8 @@ export default function LoginPage() {
             className={`w-[120px] h-[120px] ${
               gameMode.includes("hard")
                 ? "bg-green-400/60"
-                : " bg-white/30 hover:bg-white/40 "
-            }rounded-[10px] flex flex-col justify-center items-center`}
+                : "bg-white/30 hover:bg-white/40"
+            } rounded-[10px] flex flex-col justify-center items-center`}
           >
             <img src={HardModeIcon} className="w-[50px] h-[50px]" />
             <label className="text-[20px] font-medium text-white">Hard</label>

@@ -6,27 +6,27 @@ import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 
+
 interface UserData {
   userName: string;
   password: string;
-  name: string;
 }
 export default function LoginPage() {
   const [userData, setUserData] = useState<UserData>({
     userName: "",
     password: "",
-    name: "",
   });
 
   const handleChange = (name: keyof UserData, value: string) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSignUp = () => {
+  const handleSignIn = () => {
     axios
-      .post("http://localhost:8080/app/api/auth/sign-up", userData)
+      .post("http://localhost:8080/app/api/auth/sign-in", userData)
       .then((res) => {
-         switch(res.status){
+
+        switch(res.status){
           case 200 :
             toast.success("Sign in successful!");
             sessionStorage.setItem("token", res.data.token);
@@ -35,14 +35,15 @@ export default function LoginPage() {
             window.location.href = "/home";
             break;
         }
+        
       })
-      .catch((err) => {
-        console.error(err);
+      .catch(() => {
+        toast.error("Unexpected error. Please try again!");
       });
   };
 
-  const handleSignIn = () => {
-    window.location.href = "/";
+  const handleSignUp = () => {
+    window.location.href = "/sign-up";
   };
 
   return (
@@ -61,7 +62,7 @@ export default function LoginPage() {
           <label className="text-[20px] font-bold text-white">Sign In</label>
         </div>
 
-        <div className="w-[80%] h-[40%] flex flex-col justify-between">
+        <div className="w-[80%] h-[30%] flex flex-col justify-between">
           <TextField
             required
             id="outlined-required"
@@ -85,6 +86,7 @@ export default function LoginPage() {
             required
             id="outlined-required"
             label="Password"
+            type="password"
             placeholder="Text Here"
             sx={{
               width: "100%",
@@ -99,33 +101,14 @@ export default function LoginPage() {
             value={userData.password}
             onChange={(e) => handleChange("password", e.target.value)}
           />
-
-          <TextField
-            required
-            id="outlined-required"
-            label="Name"
-            placeholder="Text Here"
-            sx={{
-              width: "100%",
-              input: { color: "white" },
-              label: { color: "white" },
-              "& .MuiOutlinedInput-root": {
-                "& fieldset": { borderColor: "white" },
-                "&:hover fieldset": { borderColor: "white" },
-                "&.Mui-focused fieldset": { borderColor: "white" },
-              },
-            }}
-            value={userData.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-          />
         </div>
 
         <div className="w-[80%] h-[20%] flex flex-row justify-between items-center">
-          <div className="w-[150px] h-[35px]">
+          <div className="w-[150px] h-[35px] ">
             <GenaricButton
               onClick={handleSignIn}
               textSize={15}
-              discription={"Log In"}
+              discription={"Sign In"}
             />
           </div>
 
@@ -133,7 +116,7 @@ export default function LoginPage() {
             <GenaricButton
               onClick={handleSignUp}
               textSize={15}
-              discription={"Sign In"}
+              discription={"Sign Up"}
             />
           </div>
         </div>

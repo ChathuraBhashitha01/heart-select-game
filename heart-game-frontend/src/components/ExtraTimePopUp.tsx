@@ -49,7 +49,7 @@ export default function ExtraTimePopUp({ onClose, onSubmit }: ExtraTimeProps) {
       </label>
       <div className="w-[90%] h-[70%]  flex flex-col justify-between items-center">
         <label className="text-[13px] font-bold text-white mb-2">
-          Choose the number of hearts and get more time to memorize!
+         Choose the number of hearts you want and enjoy extra time to memorize each pattern !
         </label>
         <img
           src={`data:image/png;base64,${games}`}
