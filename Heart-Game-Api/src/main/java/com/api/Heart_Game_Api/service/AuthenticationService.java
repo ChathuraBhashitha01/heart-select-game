@@ -7,4 +7,5 @@ import com.api.Heart_Game_Api.auth.response.JwtAuthResponse;
 public interface AuthenticationService {
     JwtAuthResponse signIn(SignInRequest signInRequest);
     JwtAuthResponse signUp(SignUpRequest signUpRequest);
+    JwtAuthResponse refreshToken(String refreshToken);
 }

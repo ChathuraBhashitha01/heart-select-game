@@ -17,7 +17,7 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService{
     @Value("${token.key}")
-    String jwtKey;
+    private String jwtKey;
 
     @Override
     public String extractUserName(String token) {
@@ -26,18 +26,34 @@ public class JwtServiceImpl implements JwtService{
 
     @Override
     public String generateToken(UserDetails userDetails) {
-       HashMap<String, Object> claims = new HashMap<>();
+        HashMap<String, Object> claims = new HashMap<>();
         Date currentDate = new Date();
-        Date expiredDate = new Date(currentDate.getTime() + 1000 * 60 * 1000);
-        String accessToken = Jwts.builder()
+        Date expiredDate = new Date(currentDate.getTime() + 1000 * 60 * 1); 
+        return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsername()) 
-                .setIssuedAt(currentDate) 
-                .setExpiration(expiredDate) 
-                .signWith(getSignKey(),SignatureAlgorithm.HS256) 
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(currentDate)
+                .setExpiration(expiredDate)
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
+    }
 
-        return accessToken;
+    @Override
+    public String generateRefreshToken(UserDetails userDetails) {
+        Date currentDate = new Date();
+        Date expiredDate = new Date(currentDate.getTime() + 1000L * 60 * 60 * 24 * 7);
+        return Jwts.builder()
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(currentDate)
+                .setExpiration(expiredDate)
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    @Override
+    public boolean isRefreshTokenValid(String token, UserDetails userDetails){
+        String subject = extractClaims(token, Claims::getSubject);
+        return subject.equals(userDetails.getUsername()) && !isExpired(token);
     }
 
     @Override
@@ -45,10 +61,10 @@ public class JwtServiceImpl implements JwtService{
         String subject = extractClaims(token, Claims::getSubject);
         return subject.equals(userDetails.getUsername()) && !isExpired(token);
     }
-    
+
     private Key getSignKey(){
         byte[] bytes = Decoders.BASE64.decode(jwtKey);
-        return Keys.hmacShaKeyFor(bytes); 
+        return Keys.hmacShaKeyFor(bytes);
     }
 
     private Claims getAllClaims(String token){

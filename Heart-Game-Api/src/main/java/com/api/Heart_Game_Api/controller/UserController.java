@@ -1,5 +1,7 @@
 package com.api.Heart_Game_Api.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,8 +27,15 @@ public class UserController {
     public ResponseEntity<JwtAuthResponse> signIn(@RequestBody SignInRequest signInRequest){
         return ResponseEntity.ok(authenticationService.signIn(signInRequest));
     }
+    
     @PostMapping("/sign-up")
     public ResponseEntity<JwtAuthResponse> signUp(@RequestBody SignUpRequest signUpRequest){
         return ResponseEntity.ok(authenticationService.signUp(signUpRequest));
+    }
+    
+    @PostMapping("/refresh")
+    public ResponseEntity<JwtAuthResponse> refreshToken(@RequestBody Map<String, String> request) {
+         String requestRefreshToken = request.get("refreshToken");
+         return ResponseEntity.ok(authenticationService.refreshToken(requestRefreshToken));  
     }
 }
