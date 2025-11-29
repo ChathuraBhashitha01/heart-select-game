@@ -27,6 +27,8 @@ export default function LoginPage() {
       .then((res) => {
         if (res.status === 200) {
           sessionStorage.setItem("token", res.data.token);
+          sessionStorage.setItem("user", res.data.name);
+          sessionStorage.setItem("refreshToken", res.data.refreshToken);
           window.location.href = "/home";
         }
       })

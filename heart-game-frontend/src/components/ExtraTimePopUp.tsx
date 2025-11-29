@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import GenaricButton from "../components/GenaricButton";
 import backgroundImage from "../assets/backgroundImage.jpg";
 import TextField from "@mui/material/TextField";
+import api from '../config/axiosConfig';
 
 interface ExtraTimeProps {
   onClose: () => void;
@@ -18,18 +18,20 @@ export default function ExtraTimePopUp({ onClose, onSubmit }: ExtraTimeProps) {
 
   const fetchData = async () => {
     try {
-      await axios
-        .get("http://localhost:8080/app/api/game", {
+      await api
+        .get("/game", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((res) => {
-          setGames(res.data.imageBase64);
-          setSolution(res.data.solution);
+          if(res.status === 200){
+            setGames(res.data.imageBase64);
+            setSolution(res.data.solution);
+          }
         });
     } catch (error) {
-      console.log("error", error);
+      
     }
   };
 

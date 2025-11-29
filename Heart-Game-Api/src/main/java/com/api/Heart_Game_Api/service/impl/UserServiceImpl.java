@@ -16,6 +16,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepo userRepo;
     private final ModelMapper mapper;
 
+    @SuppressWarnings("null")
     @Override
     public UserDetailsService userDetailService() {
      return  user_name -> userRepo.findById( user_name)
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService{
                     "user not found"));
     }
 
+    @SuppressWarnings("null")
     @Override
     public void Save(UserDTO userDTO) {
         userRepo.save(mapper.map(userDTO, User.class));

@@ -1,6 +1,5 @@
 import backgroundImage from "../assets/backgroundImage.jpg";
 import GenaricButton from "../components/GenaricButton";
-import tropy from "../assets/tropy.png";
 import axios from "axios";
 import { useEffect, useState } from "react";
 

@@ -23,6 +23,7 @@ export default function LoginPage() {
   };
 
   const handleClose = () => {
+    sessionStorage.removeItem('token')
     window.location.href = "/home";
   };
 

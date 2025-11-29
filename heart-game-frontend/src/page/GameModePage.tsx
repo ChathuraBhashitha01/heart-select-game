@@ -12,9 +12,9 @@ import ExtraTimePopUp from "../components/ExtraTimePopUp";
 import GameDetails from "../components/GameDetails";
 import TopScore from "../components/TopScore";
 import { Dialog } from "@mui/material";
-import axios from "axios";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
+import api from '../config/axiosConfig';
 
 const MODE_THEME = {
   EASY_MODE: {
@@ -75,9 +75,9 @@ export default function HomePage({ card_name }: GameMode) {
 
   const handleUserScoreOnSave = async () => {
     const username = getUsername();
-    await axios
+    await api
       .post(
-        `http://localhost:8080/app/api/profile`,
+        `/profile`,
         {
           user_name: String(username),
           game_type: mode,
@@ -96,14 +96,16 @@ export default function HomePage({ card_name }: GameMode) {
 
   const handleGetUserScore = async () => {
     const username = getUsername();
-    await axios
-      .get(`http://localhost:8080/app/api/profile/${username}/${mode}`, {
+    await api
+      .get(`/profile/${username}/${mode}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-         setTopScore(res.data.top_score);
+        if(res.status === 200){
+          setTopScore(res.data.top_score);
+        }
       });
   };
 
@@ -140,9 +142,7 @@ export default function HomePage({ card_name }: GameMode) {
   };
 
   const handleLogout = () => {
-    sessionStorage.removeItem("token");
-    sessionStorage.removeItem("user");
-    window.location.href = "/";
+    window.location.href = "/home";
   };
 
   const handleGameScore = (value: number[]) => {

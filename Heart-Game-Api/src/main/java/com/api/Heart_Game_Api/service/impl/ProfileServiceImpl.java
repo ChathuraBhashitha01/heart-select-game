@@ -23,6 +23,7 @@ public class ProfileServiceImpl implements ProfileService{
        return modelMapper.map(profileRepo.findByUserNameAndGameType(user_name,game_type),ProfileDTO.class);
     }
 
+    @SuppressWarnings("null")
     @Override
     public void saveProfile(ProfileDTO profileDTO) {
 

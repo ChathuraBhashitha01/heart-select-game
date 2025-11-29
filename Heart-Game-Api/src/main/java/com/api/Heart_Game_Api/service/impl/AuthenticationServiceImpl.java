@@ -25,6 +25,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    @SuppressWarnings("null")
     @Override
     public JwtAuthResponse signIn(SignInRequest signInRequest) {
         if (!userRepo.existsById(signInRequest.getUserName())){
@@ -53,6 +54,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .userName(signUpRequest.getUserName())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .build();
+        @SuppressWarnings("null")
         User savedUser = userRepo.save(mapper.map(userDTO, User.class));
         String generatedToken = jwtService.generateToken(savedUser);
         return JwtAuthResponse.builder().token(generatedToken).build();
