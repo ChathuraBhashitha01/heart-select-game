@@ -20,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class AuthenticationServiceImpl implements AuthenticationService{
+public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
     private final ModelMapper mapper;
@@ -31,7 +31,7 @@ public class AuthenticationServiceImpl implements AuthenticationService{
     @Override
     public JwtAuthResponse signIn(SignInRequest signInRequest) {
         User user = userRepo.findById(signInRequest.getUserName())
-            .orElseThrow(() -> new UsernameNotFoundException("user not found"));
+                .orElseThrow(() -> new UsernameNotFoundException("user not found"));
 
         String accessToken = jwtService.generateToken(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
@@ -41,29 +41,30 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .refreshToken(refreshToken.getToken())
                 .name(user.getName())
                 .build();
-        }
+    }
 
     @Override
     public JwtAuthResponse signUp(SignUpRequest signUpRequest) {
-       UserDTO userDTO = UserDTO.builder()
+        UserDTO userDTO = UserDTO.builder()
                 .name(signUpRequest.getName())
                 .userName(signUpRequest.getUserName())
                 .password(passwordEncoder.encode(signUpRequest.getPassword()))
                 .build();
         User savedUser = userRepo.save(mapper.map(userDTO, User.class));
 
-    String accessToken = jwtService.generateToken(savedUser);
-    RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
+        String accessToken = jwtService.generateToken(savedUser);
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(savedUser);
 
-    return JwtAuthResponse.builder()
-            .token(accessToken)
-            .refreshToken(refreshToken.getToken())
-            .build();
+        return JwtAuthResponse.builder()
+                .token(accessToken)
+                .refreshToken(refreshToken.getToken())
+                .name(savedUser.getName())
+                .build();
     }
 
     @Override
-    public JwtAuthResponse refreshToken(String refreshToken){
-         RefreshToken token = refreshTokenService.findByToken(refreshToken)
+    public JwtAuthResponse refreshToken(String refreshToken) {
+        RefreshToken token = refreshTokenService.findByToken(refreshToken)
                 .orElseThrow(() -> new RuntimeException("Refresh token is not in database!"));
 
         if (!jwtService.isRefreshTokenValid(token.getToken(),
@@ -77,5 +78,5 @@ public class AuthenticationServiceImpl implements AuthenticationService{
                 .refreshToken(token.getToken())
                 .build();
     }
-    
+
 }

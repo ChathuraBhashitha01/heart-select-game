@@ -4,6 +4,7 @@ import HeartImg from "../assets/heart_img.png";
 import GenaricButton from "../components/GenaricButton";
 import { useState } from "react";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 interface UserData {
   userName: string;
@@ -25,11 +26,14 @@ export default function LoginPage() {
     axios
       .post("http://localhost:8080/app/api/auth/sign-up", userData)
       .then((res) => {
-        if (res.status === 200) {
-          sessionStorage.setItem("token", res.data.token);
-          sessionStorage.setItem("user", res.data.name);
-          sessionStorage.setItem("refreshToken", res.data.refreshToken);
-          window.location.href = "/home";
+         switch(res.status){
+          case 200 :
+            toast.success("Sign in successful!");
+            sessionStorage.setItem("token", res.data.token);
+            sessionStorage.setItem("user", res.data.name);
+            sessionStorage.setItem("refreshToken", res.data.refreshToken);
+            window.location.href = "/home";
+            break;
         }
       })
       .catch((err) => {
