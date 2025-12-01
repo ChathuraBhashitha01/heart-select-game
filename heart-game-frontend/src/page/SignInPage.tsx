@@ -5,7 +5,13 @@ import GenaricButton from "../components/GenaricButton";
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputLabel from "@mui/material/InputLabel";
+import FormControl from "@mui/material/FormControl";
+import InputAdornment from "@mui/material/InputAdornment";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 interface UserData {
   userName: string;
@@ -17,6 +23,22 @@ export default function LoginPage() {
     password: "",
   });
 
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
+  const handleMouseUpPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+
   const handleChange = (name: keyof UserData, value: string) => {
     setUserData((prev) => ({ ...prev, [name]: value }));
   };
@@ -25,9 +47,8 @@ export default function LoginPage() {
     axios
       .post("http://localhost:8080/app/api/auth/sign-in", userData)
       .then((res) => {
-
-        switch(res.status){
-          case 200 :
+        switch (res.status) {
+          case 200:
             toast.success("Sign in successful!");
             sessionStorage.setItem("token", res.data.token);
             sessionStorage.setItem("user", res.data.name);
@@ -35,7 +56,6 @@ export default function LoginPage() {
             window.location.href = "/home";
             break;
         }
-        
       })
       .catch(() => {
         toast.error("Unexpected error. Please try again!");
@@ -82,12 +102,8 @@ export default function LoginPage() {
             onChange={(e) => handleChange("userName", e.target.value)}
           />
 
-          <TextField
-            required
-            id="outlined-required"
-            label="Password"
-            type="password"
-            placeholder="Text Here"
+          <FormControl
+            variant="outlined"
             sx={{
               width: "100%",
               input: { color: "white" },
@@ -98,9 +114,34 @@ export default function LoginPage() {
                 "&.Mui-focused fieldset": { borderColor: "white" },
               },
             }}
-            value={userData.password}
-            onChange={(e) => handleChange("password", e.target.value)}
-          />
+          >
+            <InputLabel htmlFor="outlined-adornment-password">
+              Password
+            </InputLabel>
+            <OutlinedInput
+              id="outlined-adornment-password"
+              type={showPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label={
+                      showPassword
+                        ? "hide the password"
+                        : "display the password"
+                    }
+                    onClick={handleClickShowPassword}
+                    onMouseDown={handleMouseDownPassword}
+                    onMouseUp={handleMouseUpPassword}
+                    edge="end"
+                  >
+                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              label="Password"
+              onChange={(e) => handleChange("password", e.target.value)}
+            />
+          </FormControl>
         </div>
 
         <div className="w-[80%] h-[20%] flex flex-row justify-between items-center">
