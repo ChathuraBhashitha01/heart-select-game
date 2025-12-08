@@ -42,7 +42,7 @@ export default function ScorePopUp({ gameMode, gameScore }: ScoreProps) {
       </div>
 
       <label className="text-[70px] font-bold text-white ">
-        {gameScore}%
+        { Number(gameScore.toFixed(2))}%
       </label>
 
       <div className="w-[80%] h-[20%] flex flex-row justify-between">

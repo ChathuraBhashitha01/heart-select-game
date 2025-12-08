@@ -28,7 +28,7 @@ public class JwtServiceImpl implements JwtService{
     public String generateToken(UserDetails userDetails) {
         HashMap<String, Object> claims = new HashMap<>();
         Date currentDate = new Date();
-        Date expiredDate = new Date(currentDate.getTime() + 1000 * 60 * 1); 
+        Date expiredDate = new Date(currentDate.getTime() + 1000 * 60 * 20); 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
